@@ -1,0 +1,23 @@
+name: Publish
+
+on:
+  push:
+    branches: 
+      - main
+
+jobs:
+  publish-image:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Build the hello-container Docker image
+      run: |
+        docker build . --tag ghcr.io/andecoa/hello-container:latest
+        docker push ghcr.io/andecoa/hello-container:latest
